@@ -1,0 +1,171 @@
+Cmp-Mod V01 Created by CvPcb (2013-07-07 BZR 4022)-stable date = 2014-04-21 19:49:03
+
+BeginCmp
+TimeStamp = /534AC780;
+Reference = C1;
+ValeurCmp = 1n5;
+IdModule  = C2;
+EndCmp
+
+BeginCmp
+TimeStamp = /534AC96C;
+Reference = C2;
+ValeurCmp = 4n7;
+IdModule  = C2;
+EndCmp
+
+BeginCmp
+TimeStamp = /534ACAAA;
+Reference = C3;
+ValeurCmp = 15n;
+IdModule  = C2;
+EndCmp
+
+BeginCmp
+TimeStamp = /534ADD31;
+Reference = C4;
+ValeurCmp = 22p;
+IdModule  = C2;
+EndCmp
+
+BeginCmp
+TimeStamp = /534ADD37;
+Reference = C5;
+ValeurCmp = 22p;
+IdModule  = C2;
+EndCmp
+
+BeginCmp
+TimeStamp = /534AC94A;
+Reference = D1;
+ValeurCmp = 1N4148;
+IdModule  = D3;
+EndCmp
+
+BeginCmp
+TimeStamp = /534AC529;
+Reference = IC1;
+ValeurCmp = ATMEGA8-P;
+IdModule  = DIP-28__300;
+EndCmp
+
+BeginCmp
+TimeStamp = /534AC770;
+Reference = L1;
+ValeurCmp = INDUCTOR;
+IdModule  = SIL-2;
+EndCmp
+
+BeginCmp
+TimeStamp = /534AE35B;
+Reference = P1;
+ValeurCmp = CONN_2;
+IdModule  = SIL-2;
+EndCmp
+
+BeginCmp
+TimeStamp = /53555009;
+Reference = P2;
+ValeurCmp = CONN_4;
+IdModule  = SIL-4;
+EndCmp
+
+BeginCmp
+TimeStamp = /534AC665;
+Reference = Q1;
+ValeurCmp = BS107;
+IdModule  = TO92;
+EndCmp
+
+BeginCmp
+TimeStamp = /534AC69E;
+Reference = Q2;
+ValeurCmp = BC547;
+IdModule  = TO92;
+EndCmp
+
+BeginCmp
+TimeStamp = /534AC759;
+Reference = R1;
+ValeurCmp = 100;
+IdModule  = R3;
+EndCmp
+
+BeginCmp
+TimeStamp = /534AC880;
+Reference = R2;
+ValeurCmp = 1K;
+IdModule  = R3;
+EndCmp
+
+BeginCmp
+TimeStamp = /534ACA53;
+Reference = R3;
+ValeurCmp = 270K;
+IdModule  = R3;
+EndCmp
+
+BeginCmp
+TimeStamp = /534ACC7B;
+Reference = R4;
+ValeurCmp = 4K7;
+IdModule  = R3;
+EndCmp
+
+BeginCmp
+TimeStamp = /534ACC81;
+Reference = R5;
+ValeurCmp = 1K8;
+IdModule  = R3;
+EndCmp
+
+BeginCmp
+TimeStamp = /534ACB85;
+Reference = R6;
+ValeurCmp = 33K;
+IdModule  = R3;
+EndCmp
+
+BeginCmp
+TimeStamp = /534ACFEF;
+Reference = R7;
+ValeurCmp = 390K;
+IdModule  = R3;
+EndCmp
+
+BeginCmp
+TimeStamp = /534AD1AC;
+Reference = R8;
+ValeurCmp = 1K2;
+IdModule  = R3;
+EndCmp
+
+BeginCmp
+TimeStamp = /534AD459;
+Reference = R9;
+ValeurCmp = 33K;
+IdModule  = R3;
+EndCmp
+
+BeginCmp
+TimeStamp = /534AC633;
+Reference = R10;
+ValeurCmp = 100K;
+IdModule  = R3;
+EndCmp
+
+BeginCmp
+TimeStamp = /534AC569;
+Reference = U1;
+ValeurCmp = LM358;
+IdModule  = DIP-8__300;
+EndCmp
+
+BeginCmp
+TimeStamp = /534ADCCA;
+Reference = X1;
+ValeurCmp = 8MHz;
+IdModule  = HC-18UV;
+EndCmp
+
+EndListe
