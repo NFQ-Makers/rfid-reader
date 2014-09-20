@@ -1,4 +1,4 @@
-update=Sat 20 Sep 2014 09:30:41 AM EEST
+update=Sat 20 Sep 2014 11:42:01 AM EEST
 version=1
 last_client=kicad
 [pcbnew]
@@ -36,11 +36,14 @@ LibName12=dip_sockets
 LibName13=pga_sockets
 LibName14=valves
 LibName15=footprints
+LibName16=BW_CommonModeChoke_Wuerth_Type-WE-CMB_RevA_25Oct2010/CommonModeChoke_Wuerth_Type-WE-CMB_RevA_24Oct2010
+LibName17=Dioden_SMD_RevA_06Sep2012/Dioden_SMD_RevA_06Sep2012
+LibName18=BW_Chokes/Choke_SMD_RevB_28July2010/Choke_SMD_RevB_28July2010
 LibDir=
 [eeschema]
 version=1
-LibDir=
-NetFmtName=
+LibDir=Dioden_SMD_RevA_06Sep2012
+NetFmtName=PcbnewAdvanced
 RptD_X=0
 RptD_Y=100
 RptLab=1
