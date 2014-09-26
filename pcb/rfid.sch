@@ -37,7 +37,7 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title ""
-Date "20 sep 2014"
+Date "26 sep 2014"
 Rev ""
 Comp ""
 Comment1 ""
@@ -411,12 +411,12 @@ $EndComp
 $Comp
 L CP1 C14
 U 1 1 54130039
-P 7900 6150
-F 0 "C14" H 7950 6250 50  0000 L CNN
-F 1 "4.7u" H 7950 6050 50  0000 L CNN
-F 2 "~" H 7900 6150 60  0000 C CNN
-F 3 "~" H 7900 6150 60  0000 C CNN
-	1    7900 6150
+P 7550 6150
+F 0 "C14" H 7600 6250 50  0000 L CNN
+F 1 "4.7u" H 7600 6050 50  0000 L CNN
+F 2 "~" H 7550 6150 60  0000 C CNN
+F 3 "~" H 7550 6150 60  0000 C CNN
+	1    7550 6150
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -597,9 +597,9 @@ Wire Wire Line
 Wire Wire Line
 	5050 2600 5100 2600
 Wire Wire Line
-	7900 5950 8550 5950
+	7550 5950 8550 5950
 Wire Wire Line
-	7900 6350 10600 6350
+	7550 6350 10600 6350
 Wire Wire Line
 	8350 6400 8350 6350
 Connection ~ 8350 6350
@@ -764,8 +764,6 @@ Wire Wire Line
 	8950 4900 8950 4750
 Wire Wire Line
 	8950 4250 8950 4150
-Wire Wire Line
-	7450 5000 7450 5250
 Wire Wire Line
 	6950 4750 6950 5250
 Wire Wire Line
@@ -1114,9 +1112,6 @@ Wire Wire Line
 	6950 5250 7000 5250
 Connection ~ 6950 5050
 Wire Wire Line
-	7450 5250 7400 5250
-Connection ~ 7450 5050
-Wire Wire Line
 	8250 1200 6750 1200
 Wire Wire Line
 	8250 2850 8750 2850
@@ -1142,4 +1137,34 @@ Wire Wire Line
 	9150 5750 9150 5950
 Wire Wire Line
 	8550 5950 8550 5750
+$Comp
+L GND #PWR025
+U 1 1 54255A0A
+P 7450 5350
+F 0 "#PWR025" H 7450 5350 30  0001 C CNN
+F 1 "GND" H 7450 5280 30  0001 C CNN
+F 2 "" H 7450 5350 60  0001 C CNN
+F 3 "" H 7450 5350 60  0001 C CNN
+	1    7450 5350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7400 5250 7450 5250
+Wire Wire Line
+	7450 5250 7450 5350
+Wire Wire Line
+	7450 5050 7450 5000
+$Comp
+L C C22
+U 1 1 54255D02
+P 7900 6150
+F 0 "C22" H 7900 6250 40  0000 L CNN
+F 1 "100n" H 7906 6065 40  0000 L CNN
+F 2 "~" H 7938 6000 30  0000 C CNN
+F 3 "~" H 7900 6150 60  0000 C CNN
+	1    7900 6150
+	1    0    0    -1  
+$EndComp
+Connection ~ 7900 5950
+Connection ~ 7900 6350
 $EndSCHEMATC
