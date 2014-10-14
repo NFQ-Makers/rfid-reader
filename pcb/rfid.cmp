@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-jul-07)-stable date = Fri 26 Sep 2014 03:36:34 PM EEST
+Cmp-Mod V01 Created by CvPcb (2013-jul-07)-stable date = Tue 14 Oct 2014 09:25:03 PM EEST
 
 BeginCmp
 TimeStamp = /5413104F;
@@ -243,6 +243,48 @@ TimeStamp = /541D30AD;
 Reference = L3;
 ValeurCmp = 22uH 3A;
 IdModule  = R3-LARGE_PADS;
+EndCmp
+
+BeginCmp
+TimeStamp = /543D6D09;
+Reference = P1;
+ValeurCmp = CONN_1;
+IdModule  = smd_pad_2mm;
+EndCmp
+
+BeginCmp
+TimeStamp = /543D6D22;
+Reference = P2;
+ValeurCmp = CONN_1;
+IdModule  = smd_pad_2mm;
+EndCmp
+
+BeginCmp
+TimeStamp = /543D6CEB;
+Reference = P3;
+ValeurCmp = CONN_1;
+IdModule  = smd_pad_2mm;
+EndCmp
+
+BeginCmp
+TimeStamp = /543D6CFA;
+Reference = P4;
+ValeurCmp = CONN_1;
+IdModule  = smd_pad_2mm;
+EndCmp
+
+BeginCmp
+TimeStamp = /543D6CCD;
+Reference = P5;
+ValeurCmp = CONN_1;
+IdModule  = smd_pad_2mm;
+EndCmp
+
+BeginCmp
+TimeStamp = /543D6CDC;
+Reference = P6;
+ValeurCmp = CONN_1;
+IdModule  = smd_pad_2mm;
 EndCmp
 
 BeginCmp
