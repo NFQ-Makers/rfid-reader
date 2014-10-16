@@ -1,6 +1,6 @@
 (export (version D)
   (design
-    (source /home/darius/Desktop/my_docs/_02_darbas/nfq_2013-11-25/repos/rfid-reader/pcb/rfid.sch)
+    (source ./rfid.sch)
     (date "Tue 14 Oct 2014 09:16:57 PM EEST")
     (tool "eeschema (2013-jul-07)-stable"))
   (components

@@ -1,0 +1,67 @@
+eeschema (2013-jul-07)-stable  >> Creation date: Thu 16 Oct 2014 10:13:44 PM EEST
+
+#Cmp ( order = Value )
+| 1n           C12       
+| 1n           C16       
+| 1n           C21       
+| 100n         C8        
+| 100n         C9        
+| 100n         C10       
+| 100n         C13       
+| 100n         C15       
+| 100n         C20       
+| 100n         C22       
+| 1u           C11       
+| 4.7u         C14       
+| 100u         C17       
+| 100u         C18       
+| 100u         C19       
+| RES          C1        
+| DV1          C2        
+| RES          C3        
+| DV1          C4        
+| RES          C5        
+| DV1          C6        
+| DV2          C7        
+| 3V6          D1        
+| 3V6          D2        
+| LED_R        D3        
+| LED_G        D4        
+| LED_PD       D5        
+| LED_PA       D6        
+| 5V6          D7        
+| EM4095       IC1       
+| ATTINY13A-SS IC2       
+| USB          J1        
+| 22uH 3A      L2        
+| 22uH 3A      L3        
+| INDUCTOR     L1        
+| CONN_1       P1        
+| CONN_1       P2        
+| CONN_1       P3        
+| CONN_1       P4        
+| CONN_1       P5        
+| CONN_1       P6        
+| 0            R5        
+| 0            R6        
+| 0            R7        
+| 0            R8        
+| 0            R9        
+| 10           R1        
+| 68           R3        
+| 68           R4        
+| 68           R11       
+| 100          R12       
+| 100          R13       
+| 100          R14       
+| 100          R15       
+| 100          R16       
+| 100          R17       
+| 100          R18       
+| 100          R19       
+| 1k           R10       
+| 2K2          R2        
+| SPEAKER      SP1       
+#End Cmp
+
+#End List
