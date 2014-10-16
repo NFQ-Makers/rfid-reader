@@ -1,74 +1,7 @@
-update=Tue 14 Oct 2014 09:00:53 PM EEST
-version=1
-last_client=pcbnew
-[eeschema]
-version=1
-LibDir=Dioden_SMD_RevA_06Sep2012
-NetFmtName=PcbnewAdvanced
-RptD_X=0
-RptD_Y=100
-RptLab=1
-LabSize=60
-[eeschema/libraries]
-LibName1=power
-LibName2=device
-LibName3=transistors
-LibName4=conn
-LibName5=linear
-LibName6=regul
-LibName7=74xx
-LibName8=cmos4000
-LibName9=adc-dac
-LibName10=memory
-LibName11=xilinx
-LibName12=special
-LibName13=microcontrollers
-LibName14=dsp
-LibName15=microchip
-LibName16=analog_switches
-LibName17=motorola
-LibName18=texas
-LibName19=intel
-LibName20=audio
-LibName21=interface
-LibName22=digital-audio
-LibName23=philips
-LibName24=display
-LibName25=cypress
-LibName26=siliconi
-LibName27=opto
-LibName28=atmel
-LibName29=contrib
-LibName30=valves
-LibName31=em4095
-[cvpcb]
-version=1
-NetIExt=net
-[cvpcb/libraries]
-EquName1=devcms
-[general]
-version=1
+update=Thu 16 Oct 2014 08:02:14 AM EEST
+last_client=kicad
 [pcbnew]
-version=1
-LastNetListRead=rfid.net
-UseCmpFile=1
-PadDrill="    0.000000"
-PadDrillOvalY="    0.000000"
-PadSizeH="    1.500000"
-PadSizeV="    4.000000"
-PcbTextSizeV="    1.500000"
-PcbTextSizeH="    1.500000"
-PcbTextThickness="    0.300000"
-ModuleTextSizeV="    1.000000"
-ModuleTextSizeH="    1.000000"
-ModuleTextSizeThickness="    0.150000"
-SolderMaskClearance="    0.000000"
-SolderMaskMinWidth="    0.000000"
-DrawSegmentWidth="    0.200000"
-BoardOutlineThickness="    0.100000"
-ModuleOutlineThickness="    0.150000"
 [pcbnew/libraries]
-LibDir=
 LibName1=sockets
 LibName2=connect
 LibName3=discret
@@ -83,8 +16,12 @@ LibName11=led
 LibName12=dip_sockets
 LibName13=pga_sockets
 LibName14=valves
-LibName15=footprints
-LibName16=BW_CommonModeChoke_Wuerth_Type-WE-CMB_RevA_25Oct2010/CommonModeChoke_Wuerth_Type-WE-CMB_RevA_24Oct2010
-LibName17=Dioden_SMD_RevA_06Sep2012/Dioden_SMD_RevA_06Sep2012
-LibName18=BW_Chokes/Choke_SMD_RevB_28July2010/Choke_SMD_RevB_28July2010
-LibName19=isp_side_connector
+LibName15=./isp_side_connector
+LibDir=
+[cvpcb]
+version=1
+NetIExt=net
+[cvpcb/libraries]
+EquName1=devcms
+[general]
+version=1
