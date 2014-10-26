@@ -5,7 +5,6 @@ A simple 125KHz rfid reader based on a ATTiny and EM4095
 
 Build around a single timer (Timer0), uses single interrupt (pin change) 
 Manchester code decoding based on Timing approach. Base clock 20MHz.
-------
 
 Input
 -------
@@ -22,6 +21,7 @@ Double layer SMD in KiCad format
 
 AVR Memory Usage
 ------
+```
 Device: attiny13a
 
 Program:     708 bytes (69.1% Full)
@@ -29,7 +29,7 @@ Program:     708 bytes (69.1% Full)
 
 Data:         11 bytes (17.2% Full)
 (.data + .bss + .noinit)
-
+```
 ---
 **Thanks to:**
 
