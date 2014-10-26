@@ -20,6 +20,16 @@ PCB
 ------
 Double layer SMD in KiCad format
 
+AVR Memory Usage
+------
+Device: attiny13a
+
+Program:     708 bytes (69.1% Full)
+(.text + .data + .bootloader)
+
+Data:         11 bytes (17.2% Full)
+(.data + .bss + .noinit)
+
 ---
 **Thanks to:**
 
