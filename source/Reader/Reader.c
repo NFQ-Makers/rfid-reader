@@ -37,6 +37,12 @@ void getBit(uint8_t period)
 {
     if (period == 2) {
         if (rStatus & (1 << R_CURRENT_BIT)) {
+            if (startBits < 9) {
+                // 0 bit on star sequence, pretend new start was captured
+                rStatus = 0;
+                sb(rStatus, R_START);
+                return;
+            }
             cb(rStatus, R_CURRENT_BIT);
         }
         else {
