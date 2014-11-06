@@ -3,6 +3,7 @@
 #include <util/parity.h>
 
 #include "Reader.h"
+#include "../usbdrv/usbdrv.h"
 
 /************************************************************************/
 /* Variables                                                            */
@@ -104,7 +105,7 @@ void readBit(uint32_t *dataBlock, uint8_t size, uint8_t statusBit)
 /************************************************************************/
 /* Edge change interrupt                                                */
 /************************************************************************/
-ISR(PCINT0_vect)
+ISR(INT0_vect)
 {
     if (!(rStatus & (1 << R_START))) {
         if (!(PINB & (1 << PINB2))) {
@@ -165,12 +166,12 @@ ISR(PCINT0_vect)
 void stopReader()
 {
     TCCR0B = 0;
-    PCMSK &= (1 << PCINT2);
+    GIMSK &= ~(1 << INT0);
 }
 
 void startReader()
 {
     PORTB &= ~0b11;
     rStatus = 0;
-    PCMSK |= (1 << PCINT2);
+    GIMSK |= (1 << INT0);
 }
