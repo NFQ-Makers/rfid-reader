@@ -9,11 +9,11 @@
 /* Variables                                                            */
 /************************************************************************/
 volatile uint8_t rStatus = 0;
-uint32_t vendorData = 0;
-uint32_t idData = 0;
+uint32_t         vendorData = 0;
+uint32_t         idData = 0;
 
-uint8_t startBits = 0;          // Start signal bit counter 0-9
-uint8_t dataPos = 0;          // Current data bit counter 0-31
+uint8_t          startBits = 0;    // Start signal bit counter 0-9
+uint8_t          dataPos = 0;      // Current data bit counter 0-31
 
 /************************************************************************/
 /* Calculate period between 2 edge triggers as T or T2                  */
@@ -163,15 +163,26 @@ ISR(INT0_vect)
     stopReader();
 }
 
+/************************************************************************/
+/* Turn off RF frontend, disable interrupt, stop timer                  */
+/************************************************************************/
 void stopReader()
 {
     TCCR0B = 0;
     GIMSK &= ~(1 << INT0);
+
+    PORTB |= (1 << PINB1);
 }
 
+/************************************************************************/
+/* Turn on RF frontend, enable interrupt, reset status register         */
+/************************************************************************/
 void startReader()
 {
-    PORTB &= ~0b11;
+    PORTB &= ~(1 << PINB1);
+    PORTB |= 1;
     rStatus = 0;
+
+    MCUCR |= (1 << ISC00);
     GIMSK |= (1 << INT0);
 }

@@ -7,6 +7,7 @@ CLOCK      = 20000000
 PROGRAMMER = usbasp
 OBJECTS    = RFID.o Reader/Reader.o usbdrv/usbdrv.o usbdrv/usbdrvasm.o
 FUSES      = -U lfuse:w:0xe1:m -U hfuse:w:0xd5:m
+OSCCAL     = 117
 
 AVRDUDE = avrdude -c $(PROGRAMMER) -p $(DEVICE)
 COMPILE = avr-gcc -Wall -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE)
@@ -28,8 +29,11 @@ flash:	all
 
 fuse:
 	$(AVRDUDE) $(FUSES)
+	
+tune:
+	$(AVRDUDE) -U eeprom:w:$(OSCCAL):m
 
-install: flash fuse
+install: flash fuse tune
 
 clean:
 	rm -f RFID.hex RFID.elf $(OBJECTS)

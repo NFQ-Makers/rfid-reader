@@ -1,6 +1,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
+#include <stdlib.h>
 
 #include <avr/wdt.h>
 #include <avr/eeprom.h>
@@ -9,7 +10,10 @@
 #include "Reader/Reader.h"
 #include "usbdrv/usbdrv.h"
 
-const PROGMEM char usbHidReportDescriptor[USB_CFG_HID_REPORT_DESCRIPTOR_LENGTH] = { /* USB report descriptor */
+/************************************************************************/
+/* Lets say something about what we are                                 */
+/************************************************************************/
+const PROGMEM char usbHidReportDescriptor[USB_CFG_HID_REPORT_DESCRIPTOR_LENGTH] = {
         0x05, 0x01,                    // USAGE_PAGE (Generic Desktop)
         0x09, 0x06,                    // USAGE (Keyboard)
         0xa1, 0x01,                    // COLLECTION (Application)
@@ -30,86 +34,114 @@ const PROGMEM char usbHidReportDescriptor[USB_CFG_HID_REPORT_DESCRIPTOR_LENGTH] 
         0xc0                           // END_COLLECTION
     };
 
-static uchar    reportBuffer[2];    /* buffer for HID reports */
-static uchar    idleRate;           /* in 4 ms units */
+/************************************************************************/
+/* USB TX Buffer data                                                   */
+/************************************************************************/
+static uchar     reportBuffer[2];
 
+/************************************************************************/
+/* HID seems to be controller by the usbdrv itself                      */
+/************************************************************************/
 uchar   usbFunctionSetup(uchar data[8])
 {
-    usbRequest_t    *rq = (void *)data;
-
-    usbMsgPtr = reportBuffer;
-    if((rq->bmRequestType & USBRQ_TYPE_MASK) == USBRQ_TYPE_CLASS){    /* class request type */
-        if(rq->bRequest == USBRQ_HID_GET_REPORT){  /* wValue: ReportType (highbyte), ReportID (lowbyte) */
-            /* we only have one report type, so don't look at wValue */
-            return sizeof(reportBuffer);
-        }else if(rq->bRequest == USBRQ_HID_GET_IDLE){
-            usbMsgPtr = &idleRate;
-            return 1;
-        }else if(rq->bRequest == USBRQ_HID_SET_IDLE){
-            idleRate = rq->wValue.bytes[1];
-        }
-    }else{
-        /* no vendor specific requests implemented */
-    }
     return 0;
 }
 
+/************************************************************************/
+/* Delay with a tamed watchdog                                          */
+/************************************************************************/
+void smartDelay(uint16_t ms, uint8_t usb)
+{
+    while (ms) {
+        wdt_reset();
+
+        if (usb) {
+            usbPoll();
+        }
+
+        _delay_us(990);
+        ms--;
+    }
+}
+
+/************************************************************************/
+/* Lets rock & roll                                                     */
+/************************************************************************/
 int main(void)
 {
-    // ID for comparison
-    uint32_t goodUser = 0x00000000;
+    // Turbo charge internal clock to ~20 MHz if no value is set in eeprom try 117
+    // it seems its quite near
+    uint8_t calibration = eeprom_read_byte(0);
+    OSCCAL = (calibration != 0xFF) ? calibration : 117;
 
-    // Turbo charge internal clock to ~20 MHz (this value will differ for each chip)
-    OSCCAL = 118;
+    // A short watchdog
+    wdt_enable(WDTO_120MS);
+
+    // USB init needs to be called before interrupts are enabled
+    usbInit();
+
+    // Simulate unpluging device to host
+    usbDeviceDisconnect();
 
     // PINB1 AND PINB0 as outputs
     DDRB |= 0b11;
 
-    // Turn of RF front-end (fancy effects)
-    PORTB |= (1 << PINB1);
-    PORTB &= ~1;
+    // Turn of RF front-end, leds off
+    PORTB |= 0b11;
 
-    // Disconect USB device
-    usbDeviceDisconnect();
-
-    _delay_ms(300);
-
-    PORTB &= ~(1 << PINB1);
-    usbDeviceConnect();
-
-    wdt_enable(WDTO_1S);
-
-    usbInit();
+    // Delay to give some time for host to process device removal
+    smartDelay(300, 0);
 
     // Enable interrupts
-    GIMSK |= (1 << PCIE);
-    MCUCR |= (1 << ISC00);
     sei();
+
+    // Simulate device connection in host and delay to process.
+    // Well if windows will install any drivers it will need more that 300ms
+    // but this is just a safeguard for normal operation
+    usbDeviceConnect();
+    smartDelay(300, 1);
 
     // Start checking for RF tags
     startReader();
 
     while (1) {
+        // We are alive. Aren't we?
         wdt_reset();
-                usbPoll();
+        usbPoll();
 
-                if(usbInterruptIsReady()){ /* we can send another key */
-                    reportBuffer[0] = 0;    /* no modifiers */
-                    reportBuffer[1] = 37;
-                    usbSetInterrupt(reportBuffer, sizeof(reportBuffer));
-                }
-
+        // We got a user ID ready (card red duhh....)
         if (rStatus & (1 << R_ID_READY)) {
-            if (goodUser == idData) {
-                PORTB &= ~(1 << PB1);
-                PORTB |= 1;
-            }
-            else {
-                PORTB |= (1 << PB1);
-                PORTB &= ~1;
+            // Some string and number porn
+            char idString[12];
+            uint8_t pos = 0;
+
+            ltoa(idData, idString, 10);
+            idString[10] = 59; // ENTER 19 will be subtracted
+            idString[11] = 0; // All keys are released
+
+            // Turn red led and a sub woofer - BUSY! USB transmission in progress
+            PORTB &= ~1;
+
+            // We could use pointers here but, adding 2 additional calls for ENTER and
+            // NO KEY PRESSED is just as horrible as array position tracking
+            // also with this approach we will send few additional NO KEY (0) reports if id is
+            // shorter that 10 chars
+            while (pos < 12) {
+                if(usbInterruptIsReady()){ // We can send another report
+                    uint8_t c = idString[pos];
+                    reportBuffer[0] = 0;    // No modifiers like ctrl, alt etc
+                    reportBuffer[1] = (c == 48) ? 39 : c - 19;
+                    usbSetInterrupt(reportBuffer, sizeof(reportBuffer));
+                    pos++;
+                }
             }
 
-            _delay_ms(50);
+            // In case that buzzer was not annoying enough, heres additional ~100ms of that
+            smartDelay(100, 1);
+            PORTB |= 1;
+
+            // Additional delay before starting next read session, but this time without the buzzer
+            smartDelay(400, 1);
             startReader();
         }
     }
