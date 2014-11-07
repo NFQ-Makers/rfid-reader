@@ -29,7 +29,7 @@
   * Next in **RFID.c** you should add method `usbEventReset()` which will do all the calibration. It can be taken from [EasyLoger](http://www.obdev.at/products/vusb/easylogger.html)
   * If you make `usbEventReset()` yourself then edit **RFID.c** `main()` method and change OSSCAL loading (first lines).
   * This should fix USB issues. The next part is to adapt Manchester decoding to new frequency. In **Reader.c** there is a method `uint8_t getPeriod(uint8_t cycles)` which desides on periods between 2 edge triggers on RF frontend output. Cycles are `Timer0` counts from `TCNT0` register. Now `Timer0` is configured with prescaler of **1024** meaning each 1024 cpu cycles `TCNT0` will be increased by **1**. So each value is about **61.2ms**
-  * Tipical **T** range is around **256ms** and **2T** is **512ms**
+  * Tipical **T** range is around **256us** and **2T** is **512us**
   * First thing would be do decrease the prescaler of `Timer0`. Prescaler is set in **Reader.c**  Line 114 `TCCR0B |= 0b101;` . Be avare that if prescaler is to low, `TCNT0` will overflow as it is only 8bits long. So choose a proper value or implement overflow counting as well.
   * After `Timer0` prescaler will be changed next step is to tweak the T and 2T perdion valuesin **Reader.c** method `getPeriod()`
   * And thats all, **HAVE FUN!!**
