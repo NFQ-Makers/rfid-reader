@@ -2,6 +2,7 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include <avr/wdt.h>
 #include <avr/eeprom.h>
@@ -65,14 +66,80 @@ void smartDelay(uint16_t ms, uint8_t usb)
 }
 
 /************************************************************************/
+/* 16.5MHz calibration routine                                          */
+/************************************************************************/
+static void calibrateOscillator(void)
+{
+    uint8_t step = 128;
+    uint8_t trialValue = 0;
+    uint8_t optimumValue;
+    int x, optimumDev, targetValue = (unsigned)(1499 * (double)F_CPU / 10.5e6 + 0.5);
+
+    /* do a binary search: */
+    do{
+        OSCCAL = trialValue + step;
+        x = usbMeasureFrameLength();    /* proportional to current real frequency */
+        if(x < targetValue)             /* frequency still too low */
+            trialValue += step;
+        step >>= 1;
+    }while(step > 0);
+
+    /* We have a precision of +/- 1 for optimum OSCCAL here */
+    /* now do a neighborhood search for optimum value */
+    optimumValue = trialValue;
+    optimumDev = x; /* this is certainly far away from optimum */
+
+    for(OSCCAL = trialValue - 1; OSCCAL <= trialValue + 1; OSCCAL++){
+        x = usbMeasureFrameLength() - targetValue;
+        if(x < 0)
+            x = -x;
+        if(x < optimumDev){
+            optimumDev = x;
+            optimumValue = OSCCAL;
+        }
+    }
+    OSCCAL = optimumValue;
+}
+
+/************************************************************************/
+/* USB reset event hook                                                 */
+/************************************************************************/
+void usbEventResetReady(void)
+{
+    cli();
+    calibrateOscillator();
+    sei();
+    eeprom_write_byte(0, OSCCAL);   /* store the calibrated value in EEPROM */
+}
+
+/************************************************************************/
+/* Fill in USB HID report and send it                                   */
+/************************************************************************/
+void sendReport(uchar c)
+{
+    reportBuffer[0] = 0; // No additional modifiers
+
+    if (c == 48) {
+        c = 39;
+    } else if (c != 0) {
+        c -= 19;
+    }
+
+    reportBuffer[1] = c;
+
+    usbSetInterrupt(reportBuffer, sizeof(reportBuffer));
+}
+
+/************************************************************************/
 /* Lets rock & roll                                                     */
 /************************************************************************/
 int main(void)
 {
-    // Turbo charge internal clock to ~20 MHz if no value is set in eeprom try 117
-    // it seems its quite near
-    uint8_t calibration = eeprom_read_byte(0);
-    OSCCAL = (calibration != 0xFF) ? calibration : 117;
+    // In case we have a reset without USB reset event load last calibrated value
+    uint8_t calibrationValue = eeprom_read_byte(0);
+    if (calibrationValue != 0xFF) {
+        OSCCAL = calibrationValue;
+    }
 
     // A short watchdog
     wdt_enable(WDTO_120MS);
@@ -96,10 +163,10 @@ int main(void)
     sei();
 
     // Simulate device connection in host and delay to process.
-    // Well if windows will install any drivers it will need more that 300ms
+    // Well if windows will install any drivers it will need more that 1s
     // but this is just a safeguard for normal operation
     usbDeviceConnect();
-    smartDelay(300, 1);
+    smartDelay(1000, 1);
 
     // Start checking for RF tags
     startReader();
@@ -115,32 +182,35 @@ int main(void)
             char idString[12];
             uint8_t pos = 0;
 
-            ltoa(idData, idString, 10);
+            sprintf(idString, "%010lu", idData);
             idString[10] = 59; // ENTER 19 will be subtracted
             idString[11] = 0; // All keys are released
 
             // Turn red led and a sub woofer - BUSY! USB transmission in progress
             PORTB &= ~1;
+            uint8_t sendEmpty = 0;
 
-            // We could use pointers here but, adding 2 additional calls for ENTER and
-            // NO KEY PRESSED is just as horrible as array position tracking
-            // also with this approach we will send few additional NO KEY (0) reports if id is
-            // shorter that 10 chars
-            while (pos < 12) {
+            while (pos < 12 || sendEmpty) {
                 if(usbInterruptIsReady()){ // We can send another report
-                    uint8_t c = idString[pos];
-                    reportBuffer[0] = 0;    // No modifiers like ctrl, alt etc
-                    reportBuffer[1] = (c == 48) ? 39 : c - 19;
-                    usbSetInterrupt(reportBuffer, sizeof(reportBuffer));
-                    pos++;
+                    wdt_reset();
+                    if (sendEmpty) {
+                        // No buttons pressed, we need this to be not affected by the host
+                        // keyboard key down delay
+                        sendReport(0);
+                        sendEmpty = 0;
+                        continue;
+                    } else {
+                        sendReport(idString[pos]);
+                        pos++;
+                        sendEmpty = 1;
+                    }
                 }
             }
 
-            // In case that buzzer was not annoying enough, heres additional ~100ms of that
-            smartDelay(100, 1);
+            // Turn off that buzzer, please!!
             PORTB |= 1;
 
-            // Additional delay before starting next read session, but this time without the buzzer
+            // Some delay to minimize double reads
             smartDelay(400, 1);
             startReader();
         }

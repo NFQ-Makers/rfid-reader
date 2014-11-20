@@ -17,14 +17,14 @@ uint8_t          dataPos = 0;      // Current data bit counter 0-31
 
 /************************************************************************/
 /* Calculate period between 2 edge triggers as T or T2                  */
-/* Single counter cycle ~61.2uS                                         */
+/* Single counter cycle ~15.51uS                                        */
 /************************************************************************/
 uint8_t getPeriod(uint8_t cycles)
 {
-    if (cycles >= 2 && cycles <= 6) {
+    if (cycles >= 12 && cycles <= 20) {
         return 1;
     }
-    else if (cycles >= 7 && cycles <= 12) {
+    else if (cycles >= 29 && cycles <= 37) {
         return 2;
     }
 
@@ -111,7 +111,7 @@ ISR(INT0_vect)
         if (!(PINB & (1 << PINB2))) {
             sb(rStatus, R_START);
 
-            TCCR0B |= 0b101;
+            TCCR0B |= 0b100;
             TCNT0 = 0;
         }
         return;

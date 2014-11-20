@@ -4,7 +4,7 @@ RFID Reader
 A not so simple 125KHz rfid reader based on a ATTiny and EM4095
 
 Build around a single timer (Timer0), uses two interrupts pin change and INT0
-Manchester code decoding based on Timing approach. Base clock 20MHz.
+Manchester code decoding based on Timing approach. Base clock 16.5MHz.
 
 Input
 -------
@@ -17,7 +17,8 @@ Outputs
 
 Quite interseting
 ------
-This device ignores almost everything and runs on 20Mhz without a crystal, with hand tuned OSCCAL value. Crazy isn't it? In any case code will try to load an OSCCAL value from EEPROM address 0. As it is the first byte it can be programed via avrdude with -U eeprom:w:value:m In winter period try to increase or decrease the value a bit. Base is around 117
+This device tries to calibrate itself to 16.5MHz by measuring usb packet lenght. It also stores its last calibration
+value to EEPROM byte address 0 (first byte as this can be read by avrdude)
 
 Also never compile this with optimization level -O3 as USB will not work. -Os (size) seems to be ok
 
@@ -27,8 +28,7 @@ For convinience there is a make file with instructions:
 - **make** - compiles the compileables
 - **make flash** - flashes flash with a flash file
 - **make fuse** - tries to fuse the fuses
-- **make tune** - flashes OSCCAL value from Makefile to EEPROM
-- **make install** - compiles, flashes, fuses, tunes
+- **make install** - compiles, flashes, fuses
 
 PCB
 ------

@@ -109,7 +109,12 @@
  * one parameter which distinguishes between the start of RESET state and its
  * end.
  */
-#define USB_CFG_HAVE_MEASURE_FRAME_LENGTH   0
+#ifndef __ASSEMBLER__
+    extern void usbEventResetReady(void);
+#endif
+#define USB_RESET_HOOK(isReset) if(!isReset){usbEventResetReady();}
+
+#define USB_CFG_HAVE_MEASURE_FRAME_LENGTH   1
 /* define this macro to 1 if you want the function usbMeasureFrameLength()
  * compiled in. This function can be used to calibrate the AVR's RC oscillator.
  */
