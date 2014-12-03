@@ -2,14 +2,13 @@
 # Author: Aiavras
 # License: @see LICENSE
 
-DEVICE     = attiny13a
-PROGDEVICE = attiny13
-CLOCK      = 20000000
+DEVICE     = attiny85
+CLOCK      = 16500000
 PROGRAMMER = usbasp
-OBJECTS    = RFID.o Reader/Reader.o
-FUSES      = -U lfuse:w:0x3a:m -U hfuse:w:0xff:m
+OBJECTS    = RFID.o Reader/Reader.o usbdrv/usbdrv.o usbdrv/usbdrvasm.o
+FUSES      = -U lfuse:w:0xe1:m -U hfuse:w:0xd5:m
 
-AVRDUDE = avrdude -c $(PROGRAMMER) -p $(PROGDEVICE)
+AVRDUDE = avrdude -c $(PROGRAMMER) -p $(DEVICE)
 COMPILE = avr-gcc -Wall -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE)
 
 # symbolic targets:

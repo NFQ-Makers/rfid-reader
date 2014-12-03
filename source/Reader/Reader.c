@@ -3,27 +3,28 @@
 #include <util/parity.h>
 
 #include "Reader.h"
+#include "../usbdrv/usbdrv.h"
 
 /************************************************************************/
 /* Variables                                                            */
 /************************************************************************/
 volatile uint8_t rStatus = 0;
-uint32_t vendorData = 0;
-uint32_t idData = 0;
+uint32_t         vendorData = 0;
+uint32_t         idData = 0;
 
-uint8_t startBits = 0;          // Start signal bit counter 0-9
-uint8_t dataPos = 0;          // Current data bit counter 0-31
+uint8_t          startBits = 0;    // Start signal bit counter 0-9
+uint8_t          dataPos = 0;      // Current data bit counter 0-31
 
 /************************************************************************/
 /* Calculate period between 2 edge triggers as T or T2                  */
-/* Single counter cycle ~61.2uS                                         */
+/* Single counter cycle ~15.51uS                                        */
 /************************************************************************/
 uint8_t getPeriod(uint8_t cycles)
 {
-    if (cycles >= 2 && cycles <= 6) {
+    if (cycles >= 12 && cycles <= 20) {
         return 1;
     }
-    else if (cycles >= 7 && cycles <= 12) {
+    else if (cycles >= 29 && cycles <= 37) {
         return 2;
     }
 
@@ -104,13 +105,13 @@ void readBit(uint32_t *dataBlock, uint8_t size, uint8_t statusBit)
 /************************************************************************/
 /* Edge change interrupt                                                */
 /************************************************************************/
-ISR(PCINT0_vect)
+ISR(INT0_vect)
 {
     if (!(rStatus & (1 << R_START))) {
         if (!(PINB & (1 << PINB2))) {
             sb(rStatus, R_START);
 
-            TCCR0B |= 0b101;
+            TCCR0B |= 0b100;
             TCNT0 = 0;
         }
         return;
@@ -162,15 +163,26 @@ ISR(PCINT0_vect)
     stopReader();
 }
 
+/************************************************************************/
+/* Turn off RF frontend, disable interrupt, stop timer                  */
+/************************************************************************/
 void stopReader()
 {
     TCCR0B = 0;
-    PCMSK &= (1 << PCINT2);
+    GIMSK &= ~(1 << INT0);
+
+    PORTB |= (1 << PINB1);
 }
 
+/************************************************************************/
+/* Turn on RF frontend, enable interrupt, reset status register         */
+/************************************************************************/
 void startReader()
 {
-    PORTB &= ~0b11;
+    PORTB &= ~(1 << PINB1);
+    PORTB |= 1;
     rStatus = 0;
-    PCMSK |= (1 << PCINT2);
+
+    MCUCR |= (1 << ISC00);
+    GIMSK |= (1 << INT0);
 }
